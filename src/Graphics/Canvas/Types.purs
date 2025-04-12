@@ -4,6 +4,7 @@ module Graphics.Canvas.Types
   , Point
   , Dimensions
   , Rectangle
+  , Rect
   , rectangle
   , topLeft
   , topRight
@@ -31,13 +32,17 @@ type Dimensions a =
   }
 
 -- | A rectangle on the canvas, represented as its top left corner and its dimensions.
--- | Defined as a flat record for convenience. Dimensions are assumed to be positive.
+-- | Defined as a flat record for convenience; this is guaranteed to be stable for FFI use.
+-- | Dimensions are assumed to be positive.
 type Rectangle a =
   { x :: a
   , y :: a
   , w :: a
   , h :: a
   }
+
+-- | Alias for the most common `Rectangle` in the API.
+type Rect = Rectangle Number
 
 -- | Compose a `Point` and `Dimensions` into a `Rectangle`.
 rectangle :: forall a. Point a -> Dimensions a -> Rectangle a
