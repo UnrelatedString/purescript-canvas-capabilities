@@ -5,9 +5,19 @@
 [![Pursuit](https://pursuit.purescript.org/packages/purescript-canvas-capabilities/badge?)](https://pursuit.purescript.org/packages/purescript-canvas-capabilities)
 
 
-Bindings to the Canvas API, in the form of fine-grained "capability" classes, allowing easier mocking and porting, and reducing the mental load of using the Canvas API directly. Improving the ergonomics of the API itself is out of scope; see `massara-na-canvas` or any of the myriad JS libraries made for that purpose. Maintained independently from and not interoperable with the `canvas` package, but things should `unsafeCoerce` back and forth well enough if you really want them to. 
+Bindings to the Canvas API, in the form of fine-grained "capability" classes, allowing easier mocking and porting, and reducing the mental load of using the Canvas API directly. Improving the ergonomics of the API itself is out of scope; see `massara-na-canvas` or any of the myriad JS libraries made for that purpose. Maintained independently from and not interoperable with the `canvas` package, but things should `unsafeCoerce` back and forth well enough if you really want them to, and uses other existing web bindings whenever possible.
 
-## Coverage:
+## Installation
+
+```
+spago install canvas-capabilities
+```
+
+## Documentation
+
+Documentation is published [on Pursuit](https://pursuit.purescript.org/packages/purescript-canvas-capabilities).
+
+## Coverage
 
 ### `HTMLCanvasElement`
 

@@ -3,6 +3,8 @@ package:
   description: Bindings to the Canvas API, in the form of fine-grained "capability" classes
   dependencies:
     - prelude: ">=6.0.2 <7.0.0"
+    - effect: ">=4.0.0 <5.0.0"
+    - web-html: ">=4.1.0 <5.0.0"
   test:
     main: Test.Main
     dependencies:
