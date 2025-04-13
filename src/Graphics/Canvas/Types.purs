@@ -1,6 +1,7 @@
 module Graphics.Canvas.Types
   ( module Reexports
   , CanvasRenderingContext2D
+  , OffscreenCanvasRenderingContext2D
   , Path2D
   , Point
   , Dimensions
@@ -169,9 +170,9 @@ type Interval a =
   , end :: a
   }
 
--- | Nonzero is considered the default.
-data CanvasFillRule = NonzeroFill | EvenOddFill
+-- | The nonzero winding rule is considered the default.
+data CanvasFillRule = NonzeroWindingFill | EvenOddFill
 
 instance Show CanvasFillRule where
-  show NonzeroFill = "nonzero"
+  show NonzeroWindingFill = "nonzero"
   show EvenOddFill = "evenodd"

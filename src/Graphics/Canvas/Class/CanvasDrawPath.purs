@@ -15,12 +15,23 @@ module Graphics.Canvas.Class.CanvasDrawPath
 
 import Prelude
 
+import Effect (Effect)
+import Effect.Uncurried
+  ( EffectFn1, runEffectFn1
+  , EffectFn2, runEffectFn2
+  , EffectFn3, runEffectFn3
+  , EffectFn4, runEffectFn4
+  )
 import Graphics.Canvas.Types
   ( CanvasFillRule
   , Point
+  , CanvasRenderingContext2D
+  , OffscreenCanvasRenderingContext2D
+  , Path2D
   )
+import Unsafe.Coerce (unsafeCoerce)
 
-class CanvasDrawPath :: Type -> Type -> (Type -> Type) -> m
+class CanvasDrawPath :: Type -> Type -> (Type -> Type) -> Constraint
 class CanvasDrawPath ctx path m where
 
   -- | Fill the path.
@@ -40,7 +51,59 @@ class CanvasDrawPath ctx path m where
 
 -- | A separate class for the single member which only makes sense
 -- | when using path data from the context itself.
-class CanvasDrawPath ctx ctx m <= CanvasDrawOwnPath ctx m where
+class CanvasDrawPath ctx Unit m <= CanvasDrawOwnPath ctx m where
 
   -- | Clear all subpaths of the context.
   beginPath :: ctx -> m Unit
+
+-- | for cheeky splatting :p
+type ForeignMaybePath = Array Path2D
+
+foreign import data ICanvasDrawPath :: Type
+
+fromContext :: CanvasRenderingContext2D -> ICanvasDrawPath
+fromContext = unsafeCoerce
+
+fromOffscreen :: OffscreenCanvasRenderingContext2D -> ICanvasDrawPath
+fromOffscreen = unsafeCoerce
+
+foreign import beginPath_ :: EffectFn1 ICanvasDrawPath Unit
+foreign import fill_ :: EffectFn3 ForeignMaybePath ICanvasDrawPath String Unit
+foreign import stroke_ :: EffectFn2 ForeignMaybePath ICanvasDrawPath Unit
+foreign import clip_ :: EffectFn3 ForeignMaybePath ICanvasDrawPath String Unit
+foreign import isPointInPath_ :: EffectFn4 ForeignMaybePath ICanvasDrawPath Point CanvasFillRule Boolean
+foreign import isPointInStroke_ :: EffectFn3 ForeignMaybePath ICanvasDrawPath Point Boolean
+
+instance CanvasDrawPath CanvasRenderingContext2D Unit Effect where
+  fill ctx _ = runEffectFn3 fill_ [] (fromContext ctx) <<< show
+  stroke ctx _ = runEffectFn2 stroke_ [] $ fromContext ctx
+  clip ctx _ = runEffectFn3 clip_ [] (fromContext ctx) <<< show
+  isPointInPath ctx _ p = runEffectFn4 isPointInPath_ [] (fromContext ctx) p <<< show
+  isPointInStroke ctx _ = runEffectFn3 isPointInStroke_ [] $ fromContext ctx
+
+instance CanvasDrawOwnPath CanvasRenderingContext2D Effect where
+  beginPath = runEffectFn1 beginPath_ <<< fromContext
+
+instance CanvasDrawPath CanvasRenderingContext2D Path2D Effect where
+  fill ctx path = runEffectFn3 fill_ [path] (fromContext ctx) <<< show
+  stroke ctx path = runEffectFn2 stroke_ [path] $ fromContext ctx
+  clip ctx path = runEffectFn3 clip_ [path] (fromContext ctx) <<< show
+  isPointInPath ctx path p = runEffectFn4 isPointInPath_ [path] (fromContext ctx) p <<< show
+  isPointInStroke ctx path = runEffectFn3 isPointInStroke_ [path] $ fromContext ctx
+
+instance CanvasDrawPath OffscreenCanvasRenderingContext2D Unit Effect where
+  fill ctx _ = runEffectFn3 fill_ [] (fromOffscreen ctx) <<< show
+  stroke ctx _ = runEffectFn2 stroke_ [] $ fromOffscreen ctx
+  clip ctx _ = runEffectFn3 clip_ [] (fromOffscreen ctx) <<< show
+  isPointInPath ctx _ p = runEffectFn4 isPointInPath_ [] (fromOffscreen ctx) p <<< show
+  isPointInStroke ctx _ = runEffectFn3 isPointInStroke_ [] $ fromOffscreen ctx
+
+instance CanvasDrawOwnPath OffscreenCanvasRenderingContext2D Effect where
+  beginPath = runEffectFn1 beginPath_ <<< fromOffscreen
+
+instance CanvasDrawPath OffscreenCanvasRenderingContext2D Path2D Effect where
+  fill ctx path = runEffectFn3 fill_ [path] (fromOffscreen ctx) <<< show
+  stroke ctx path = runEffectFn2 stroke_ [path] $ fromOffscreen ctx
+  clip ctx path = runEffectFn3 clip_ [path] (fromOffscreen ctx) <<< show
+  isPointInPath ctx path p = runEffectFn4 isPointInPath_ [path] (fromOffscreen ctx) p <<< show
+  isPointInStroke ctx path = runEffectFn3 isPointInStroke_ [path] $ fromOffscreen ctx
