@@ -95,9 +95,9 @@ Documentation is published [on Pursuit](https://pursuit.purescript.org/packages/
 
 #### mixin interface `CanvasRect`
 
-- [ ] clearRect
-- [ ] fillRect
-- [ ] strokeRect
+- [x] clearRect
+- [x] fillRect
+- [x] strokeRect
 
 #### mixin interface `CanvasDrawPath`
 
@@ -153,16 +153,16 @@ Documentation is published [on Pursuit](https://pursuit.purescript.org/packages/
 
 #### mixin interface `CanvasPath`
 
-- [ ] closePath
-- [ ] moveTo
-- [ ] lineTo
-- [ ] quadraticCurveTo
-- [ ] bezierCurveTo
-- [ ] arcTo
-- [ ] rect
-- [ ] roundRect
-- [ ] arc
-- [ ] ellipse
+- [x] closePath
+- [x] moveTo
+- [x] lineTo
+- [x] quadraticCurveTo
+- [x] bezierCurveTo
+- [x] arcTo
+- [x] rect
+- [x] roundRect
+- [x] arc
+- [x] ellipse
 
 ### `CanvasGradient`
 
