@@ -25,7 +25,7 @@ class CanvasRect ctx m where
 
   -- | Erase all image data in the specified rectangle.
   -- | No-op if any coordinate or dimension is infinite or NaN.
-  -- | Subject to clipping if applicable.
+  -- | May be subject to clipping if applicable.
   clearRect :: ctx -> Rect -> m Unit
 
   -- | Fill the specified rectangle, with a fill style if applicable.

@@ -218,4 +218,11 @@ Documentation is published [on Pursuit](https://pursuit.purescript.org/packages/
 - [ ] transferToImageBitmap
 - [ ] convertToBlob
 
+### `Path2D`
+
+[MDN](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas#specifications) (not in `purescript-canvas`)
+
+- [ ] constructor
+- [ ] addPath
+
 The above Canvas API listing is adapted from ["Canvas API"](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) by Mozilla Contributors, licensed under CC-BY-SA 2.5, and from [the HTML Living Standard](https://html.spec.whatwg.org/multipage/canvas.html) by WHATWG, licensed under CC-BY 4.0. Note to self: include similar attribution [according to such guidelines](https://developer.mozilla.org/en-US/docs/MDN/Writing_guidelines/Attrib_copyright_license) when writing my own docs!
