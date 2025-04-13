@@ -21,6 +21,7 @@ module Graphics.Canvas.Types
   , tauOver
   , RectCorners(..)
   , Interval(..)
+  , CanvasFillRule
   ) where
 
 import Prelude
@@ -33,6 +34,8 @@ import Data.Number (tau)
 import Web.HTML.HTMLCanvasElement (HTMLCanvasElement) as Reexports
 
 foreign import data CanvasRenderingContext2D :: Type
+
+foreign import data OffscreenCanvasRenderingContext2D :: Type
 
 foreign import data Path2D :: Type
 
@@ -165,3 +168,10 @@ type Interval a =
   { start :: a
   , end :: a
   }
+
+-- | Nonzero is considered the default.
+data CanvasFillRule = NonzeroFill | EvenOddFill
+
+instance Show CanvasFillRule where
+  show NonzeroFill = "nonzero"
+  show EvenOddFill = "evenodd"
