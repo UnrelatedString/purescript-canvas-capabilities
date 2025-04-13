@@ -166,26 +166,23 @@ Documentation is published [on Pursuit](https://pursuit.purescript.org/packages/
 
 ### `CanvasGradient`
 
-[MDN](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient#specifications) [Pursuit](https://pursuit.purescript.org/packages/purescript-canvas/6.0.0/docs/Graphics.Canvas#t:CanvasGradient)
+[MDN](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient#specifications)
 
 - [ ] addColorStop
 
 ### `CanvasPattern`
 
-[MDN](https://developer.mozilla.org/en-US/docs/Web/API/CanvasPattern#specifications) [Pursuit](https://pursuit.purescript.org/packages/purescript-canvas/6.0.0/docs/Graphics.Canvas#t:CanvasPattern)
+[MDN](https://developer.mozilla.org/en-US/docs/Web/API/CanvasPattern#specifications)
 
 - [ ] setTransform
 
 ### `ImageBitmap`
 
-[MDN](https://developer.mozilla.org/en-US/docs/Web/API/ImageBitmap#specifications) (not in `purescript-canvas`)
-
-(low priority)
-
+[MDN](https://developer.mozilla.org/en-US/docs/Web/API/ImageBitmap#specifications) 
 
 ### `ImageData`
 
-[MDN](https://developer.mozilla.org/en-US/docs/Web/API/ImageData#specifications) [Pursuit](https://pursuit.purescript.org/packages/purescript-canvas/6.0.0/docs/Graphics.Canvas#t:ImageData)
+[MDN](https://developer.mozilla.org/en-US/docs/Web/API/ImageData#specifications)
 
 - [ ] constructor
 - [ ] width
@@ -195,7 +192,7 @@ Documentation is published [on Pursuit](https://pursuit.purescript.org/packages/
 
 ### `TextMetrics`
 
-[MDN](https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics#specifications) [Pursuit](https://pursuit.purescript.org/packages/purescript-canvas/6.0.0/docs/Graphics.Canvas#t:TextMetrics)
+[MDN](https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics#specifications)
 
 - [ ] width
 - [ ] actualBoundingBoxLeft
@@ -212,7 +209,7 @@ Documentation is published [on Pursuit](https://pursuit.purescript.org/packages/
 
 ### `OffscreenCanvas`
 
-[MDN](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas#specifications) (not in `purescript-canvas`, yet)
+[MDN](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas#specifications) 
 
 - [ ] constructor
 - [ ] width
@@ -222,7 +219,7 @@ Documentation is published [on Pursuit](https://pursuit.purescript.org/packages/
 
 ### `Path2D`
 
-[MDN](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas#specifications) (not in `purescript-canvas`)
+[MDN](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas#specifications)
 
 - [ ] constructor
 - [ ] addPath
