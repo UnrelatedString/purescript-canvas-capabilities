@@ -1,6 +1,7 @@
 module Graphics.Canvas.Types
   ( module Reexports
   , CanvasRenderingContext2D
+  , Path2D
   , Point
   , Dimensions
   , Rect
@@ -10,10 +11,24 @@ module Graphics.Canvas.Types
   , bottomLeft
   , bottomRight
   , area
-  , ControlPoint
+  , ControlPoint(..)
+  , Radius(..)
+  , radius
+  , EllipseRadii
+  , zeroEccentricity
+  , Angle(..)
+  , degrees
+  , tauOver
+  , RectCorners(..)
+  , Interval(..)
   ) where
 
 import Prelude
+
+import Data.Maybe (Maybe(..))
+import Data.Foldable (class Foldable)
+import Data.Semigroup.Foldable (class Foldable1)
+import Data.Number (tau)
 
 import Web.HTML.HTMLCanvasElement (HTMLCanvasElement) as Reexports
 
@@ -44,23 +59,23 @@ type Rect =
   }
 
 -- | Compose a `Point` and `Dimensions` into a `Rect`.
-rectangle :: Point Number -> Dimensions Number -> Rect Number
+rectangle :: Point -> Dimensions -> Rect 
 rectangle {x, y} {h, w} = {x, y, h, w}
 
 -- | Get the top left corner of a `Rect`.
-topLeft :: Rect Number -> Point Number
+topLeft :: Rect -> Point 
 topLeft {x, y} = {x, y}
 
 -- | Get the top right corner of a `Rect`.
-topRight :: Rect Number -> Point Number
+topRight :: Rect -> Point 
 topRight {x, y, w} = {x: x + w, y}
 
 -- | Get the bottom left corner of a `Rect`.
-bottomLeft :: Rect Number -> Point Number
+bottomLeft :: Rect -> Point 
 bottomLeft {x, y, h} = {x, y: y + h}
 
 -- | Get the bottom right corner of a `Rect`.
-bottomRight :: Rect Number -> Point Number
+bottomRight :: Rect -> Point 
 bottomRight {x, y, w, h} = {x: x + w, y: y + h}
 
 -- | Get the area of a `Rect` or `Dimensions`.
@@ -70,3 +85,80 @@ area {w, h} = w * h
 -- | Control points for Bézier curves and other such shapes,
 -- | as a newtype to make types more self-documenting in lieu of spec records.
 newtype ControlPoint = ControlPoint Point
+
+-- | The radius of a circle or a radius of an ellipse.
+-- | Assumed to be nonnegative; the Canvas API typically throws an error
+-- | when a negative radius is given!
+newtype Radius = Radius Number
+
+-- | Opt-in validating smart constructor for `Radius`,
+-- | giving `Nothing` if the given number is negative (not including negative zero).
+radius :: Number -> Maybe Radius
+radius n
+  | n < 0.0 = Nothing
+  | otherwise = Just $ Radius n
+
+-- | The semi-major and semi-minor axes of an ellipse,
+-- | identified with the x and y dimensions if not rotated.
+type EllipseRadii =
+  { semiMajor :: Radius
+  , semiMinor :: Radius
+  }
+
+-- | Construct `EllipseRadii` describing a circle of the given radius.
+zeroEccentricity :: Radius -> EllipseRadii
+zeroEccentricity r = { semiMajor: r, semiMinor: r }
+
+-- | An angle in radians.
+newtype Angle = Angle Number
+
+-- | Convert degrees to an `Angle` in radians.
+degrees :: Number -> Angle
+degrees d = Angle $ tau * d / 360.0
+
+-- | Get the `Angle` corresponding to a fraction of a circle.
+tauOver :: Number -> Angle
+tauOver n = Angle $ tau / n
+
+-- | Container indexed by the four corners of a rectangle.
+newtype RectCorners a = RectCorners
+  { tl :: a
+  , tr :: a
+  , bl :: a
+  , br :: a
+  }
+
+derive instance Functor RectCorners
+
+instance Apply RectCorners where
+  apply (RectCorners f) (RectCorners a) = RectCorners
+    { tl: f.tl a.tl
+    , tr: f.tr a.tr
+    , bl: f.bl a.bl
+    , br: f.br a.br
+    }
+
+instance Applicative RectCorners where
+  pure a = RectCorners
+    { tl: a
+    , tr: a
+    , bl: a
+    , br: a
+    }
+
+-- | The top left is considered the first and leftmost corner.
+-- | The direction "right" is considered to be clockwise,
+-- | so `foldl` folds clockwise from the top left
+-- | and `foldr` folds counterclockwise from the bottom left.
+instance Foldable RectCorners where
+  foldr f b (RectCorners c) = f c.tl $ f c.tr $ f c.br $ f c.bl b
+  foldl f b (RectCorners c) = b `f` c.tl `f` c.tr `f` c.br `f` c.bl
+  foldMap f (RectCorners c) = f c.tl <> f c.tr <> f c.br <> f c.bl
+
+instance Foldable1 RectCorners where
+  foldr1 f (RectCorners c) = f c.tl $ f c.tr $ f c.br c.bl
+  foldl1 f (RectCorners c) = c.tl `f` c.tr `f` c.br `f` c.bl
+  foldMap1 f (RectCorners c) = f c.tl <> f c.tr <> f c.br <> f c.bl
+
+-- | Any kind of thing defined by a start and an end.
+data Interval a = Interval a a
