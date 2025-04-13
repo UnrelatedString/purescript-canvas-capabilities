@@ -27,13 +27,20 @@ export function rect_(ctx, r) {
 }
 
 export function roundRect_(ctx, rc, rds) {
-    cts.roundRect(rc.x, rc.y, rc.w, rc.h, rds);
+    ctx.roundRect(rc.x, rc.y, rc.w, rc.h, rds);
 }
 
-export function arc_(ctx, p, ) {
-
+export function arc_(ctx, p, r, as, ccw) {
+    ctx.arc(p.x, p.y, r, as.start, as.end, ccw);
 }
 
-export function ellipse_() {
-
+export function ellipse_(ctx, p, r, rot, as, ccw) {
+    ctx.ellipse(p.x,
+                p.y,
+                r.semiMajor,
+                r.semiMinor,
+                rot,
+                as.start,
+                as.end,
+                ccw);
 }
