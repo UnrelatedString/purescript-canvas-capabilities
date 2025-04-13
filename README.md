@@ -178,7 +178,12 @@ Documentation is published [on Pursuit](https://pursuit.purescript.org/packages/
 
 ### `ImageBitmap`
 
-[MDN](https://developer.mozilla.org/en-US/docs/Web/API/ImageBitmap#specifications) 
+[MDN](https://developer.mozilla.org/en-US/docs/Web/API/ImageBitmap#specifications)
+
+- [ ] width
+- [ ] height
+- [ ] close
+  - [ ] (maybe some cleaner way to like kind of encapsulate this? idk kinda smells like scope creep but could be as simple as having stuff that returns bitmaps actually make a new monadic context for them that would I guess be like a pseudo-ReaderT or something? idk)
 
 ### `ImageData`
 
