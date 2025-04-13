@@ -71,7 +71,7 @@ foreign import beginPath_ :: EffectFn1 ICanvasDrawPath Unit
 foreign import fill_ :: EffectFn3 ForeignMaybePath ICanvasDrawPath String Unit
 foreign import stroke_ :: EffectFn2 ForeignMaybePath ICanvasDrawPath Unit
 foreign import clip_ :: EffectFn3 ForeignMaybePath ICanvasDrawPath String Unit
-foreign import isPointInPath_ :: EffectFn4 ForeignMaybePath ICanvasDrawPath Point CanvasFillRule Boolean
+foreign import isPointInPath_ :: EffectFn4 ForeignMaybePath ICanvasDrawPath Point String Boolean
 foreign import isPointInStroke_ :: EffectFn3 ForeignMaybePath ICanvasDrawPath Point Boolean
 
 instance CanvasDrawPath CanvasRenderingContext2D Unit Effect where
