@@ -14,18 +14,26 @@ module Graphics.Canvas.Class.CanvasPath
   , roundRect
   , arc
   , ellipse
+  , RoundRectRadii
+  , rectDefault
   ) where
 
 import Prelude
+
+import Data.Semigroup.Foldable (foldMap1)
 import Effect (Effect)
--- import Effect.Uncurried
---   ( 
---   )
+import Effect.Uncurried
+  ( EffectFn1, runEffectFn1
+  , EffectFn2, runEffectFn2
+  , EffectFn3, runEffectFn3
+  , EffectFn4, runEffectFn4
+  , EffectFn5, runEffectFn5
+  , EffectFn6, runEffectFn6
+  )
 import Graphics.Canvas.Types
   ( CanvasRenderingContext2D
   , Path2D
   , Point
-  , Dimensions
   , ControlPoint
   , Angle
   , Rect
@@ -96,11 +104,11 @@ class CanvasPath ctx m where
   roundRect :: ctx -> Rect -> RoundRectRadii -> m Unit
 
   -- | Precisely equivalent to `ellipse` with major and minor radii equal
-  -- | (and arbitrary finite rotation).
-  arc :: ctx -> Point -> Radius -> Interval Angle -> Boolean
+  -- | (and arbitrary finite rotation), adding a circular arc to the subpath.
+  arc :: ctx -> Point -> Radius -> Interval Angle -> Boolean -> m Unit
 
   -- | ughhhhhhhhhhhhhhhhhhhhh I need a break but I just want this to compiiiileeeeeeee
-  ellipse :: ctx -> Point -> EllipseRadii -> Angle -> Interval Angle -> Boolean
+  ellipse :: ctx -> Point -> EllipseRadii -> Angle -> Interval Angle -> Boolean -> m Unit
 
 -- | Implementation of `rect` using `moveTo`, `lineTo`, and `closePath`,
 -- | in clockwise order as specified by the standard,
@@ -115,11 +123,15 @@ rectDefault ctx r = do
 
 type RoundRectRadii = RectCorners EllipseRadii
 
+-- | Always constructed with length 4. Never ever exposed because this is a mess and I hate it
+type ForeignRoundRectRadii = Array { x :: Radius, y :: Radius }
+
+-- lmao I didn't even check that the array was clockwise before I wrote the whole Foldable instance
+translateRRR :: RoundRectRadii -> ForeignRoundRectRadii
+translateRRR = foldMap1 \{ semiMajor, semiMinor } -> [{ x: semiMajor, y: semiMinor }]
+
 -- TODO: roundRectDefault, if I can figure out how to actually draw the desired elliptic arcs?
--- because. there's no actual methods in the API for elliptic arcs in and of themselves.
--- and it's impossible to represent ellipses exactly using Bézier curves.
--- and arcTo would be confusing enough even if it DID support ellipses.
--- and is it possible to like. apply a transform to a particular step in a subpath?? maybe???
+-- which would I guess have to use start and end angles with ellipse ;_;
 
 -- | Internal helper type for representing the interface directly,
 -- | so I can reuse the implementation for both JS types including it guilt-free.
@@ -131,9 +143,40 @@ fromContext = unsafeCoerce
 fromPath2D :: Path2D -> ICanvasPath
 fromPath2D = unsafeCoerce
 
+foreign import closePath_ :: EffectFn1 ICanvasPath Unit
+foreign import moveTo_ :: EffectFn2 ICanvasPath Point Unit
+foreign import lineTo_ :: EffectFn2 ICanvasPath Point Unit
+foreign import quadraticCurveTo_ :: EffectFn3 ICanvasPath ControlPoint Point Unit
+foreign import bezierCurveTo_ :: EffectFn4 ICanvasPath ControlPoint ControlPoint Point Unit
+foreign import arcTo_ :: EffectFn4 ICanvasPath ControlPoint ControlPoint Radius Unit
+foreign import rect_ :: EffectFn2 ICanvasPath Rect Unit
+foreign import roundRect_ :: EffectFn3 ICanvasPath Rect ForeignRoundRectRadii Unit
+foreign import arc_ :: EffectFn5 ICanvasPath Point Radius (Interval Angle) Boolean Unit
+foreign import ellipse_ :: EffectFn6 ICanvasPath Point EllipseRadii Angle (Interval Angle) Boolean Unit
 
--- instance CanvasPath CanvasRenderingContext2D Effect where
---   arcTo = runEffectFn4 arcTo_ <<< fromContext
+roundRectImpl :: ICanvasPath -> Rect -> RoundRectRadii -> Effect Unit
+roundRectImpl i r = runEffectFn3 roundRect_ i r <<< translateRRR
 
--- instance CanvasPath Path2D Effect where
---   arcTo = runEffectFn4 arcTo_ <<< fromPath2D
+instance CanvasPath CanvasRenderingContext2D Effect where
+  closePath = runEffectFn1 closePath_ <<< fromContext
+  moveTo = runEffectFn2 moveTo_ <<< fromContext
+  lineTo = runEffectFn2 lineTo_ <<< fromContext
+  quadraticCurveTo = runEffectFn3 quadraticCurveTo_ <<< fromContext
+  bezierCurveTo = runEffectFn4 bezierCurveTo_ <<< fromContext
+  arcTo = runEffectFn4 arcTo_ <<< fromContext
+  rect = runEffectFn2 rect_ <<< fromContext
+  roundRect = roundRectImpl <<< fromContext
+  arc = runEffectFn5 arc_ <<< fromContext
+  ellipse = runEffectFn6 ellipse_ <<< fromContext
+
+instance CanvasPath Path2D Effect where
+  closePath = runEffectFn1 closePath_ <<< fromPath2D
+  moveTo = runEffectFn2 moveTo_ <<< fromPath2D
+  lineTo = runEffectFn2 lineTo_ <<< fromPath2D
+  quadraticCurveTo = runEffectFn3 quadraticCurveTo_ <<< fromPath2D
+  bezierCurveTo = runEffectFn4 bezierCurveTo_ <<< fromPath2D
+  arcTo = runEffectFn4 arcTo_ <<< fromPath2D
+  rect = runEffectFn2 rect_ <<< fromPath2D
+  roundRect = roundRectImpl <<< fromPath2D
+  arc = runEffectFn5 arc_ <<< fromPath2D
+  ellipse = runEffectFn6 ellipse_ <<< fromPath2D

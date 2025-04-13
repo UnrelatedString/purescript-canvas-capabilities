@@ -161,4 +161,7 @@ instance Foldable1 RectCorners where
   foldMap1 f (RectCorners c) = f c.tl <> f c.tr <> f c.br <> f c.bl
 
 -- | Any kind of thing defined by a start and an end.
-data Interval a = Interval a a
+type Interval a =
+  { start :: a
+  , end :: a
+  }
