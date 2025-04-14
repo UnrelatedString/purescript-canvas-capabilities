@@ -52,6 +52,7 @@ data TextAlign =
   | LocaleEndAlign
 
 -- | [The `TextMetrics` interface.](https://html.spec.whatwg.org/multipage/canvas.html#textmetrics)
+-- wait shoutld this use CSSPixels from dom-indexed or ??? ughhh yeah wait uhhh . fuck. because like for canvas internal use it's like maybe more convenient BUIT also semantically they're CSS pixels and a. wait what. are they always strictly going to be ints even if you render them at weird offse wait that doesn't even matter uhhhh yeah i guess it does make sense they'd always be ints vut then doesn't the standard have a way to say that or ????????????
 type TextMetrics =
   { width :: Number
   , actualBoundingBoxLeft :: Number
