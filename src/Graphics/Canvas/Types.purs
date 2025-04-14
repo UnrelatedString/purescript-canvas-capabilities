@@ -5,6 +5,7 @@ module Graphics.Canvas.Types
   , Path2D
   , TextAlign
   , TextMetrics
+  , realTextBoundingBox
   , Point
   , Dimensions
   , Rect
@@ -42,7 +43,13 @@ foreign import data OffscreenCanvasRenderingContext2D :: Type
 
 foreign import data Path2D :: Type
 
-data TextAlign --okay there's a lot of this it should probably go in its own file actually
+-- | Possible text alignment modes. Locale-dependent start alignment is the default.
+data TextAlign =
+    LeftAlign
+  | RightAlign
+  | CenteredAlign
+  | LocaleStartAlign
+  | LocaleEndAlign
 
 -- | [The `TextMetrics` interface.](https://html.spec.whatwg.org/multipage/canvas.html#textmetrics)
 type TextMetrics =
@@ -59,6 +66,21 @@ type TextMetrics =
   , alphabeticBaseline :: Number
   , ideographicBaseline :: Number
   }
+
+-- | Predict the bounding box of text from `TextMetrics` if rendered at a given `Point`,
+-- | assuming the rendering is done with the same settings.
+realTextBoundingBox :: TextMetrics -> Point -> Rect
+realTextBoundingBox
+    { actualBoundingBoxLeft, actualBoundingBoxRight
+    , actualBoundingBoxAscent, actualBoundingBoxDescent
+    }
+    { x, y }
+  =
+    { x: x - actualBoundingBoxLeft
+    , y: y - actualBoundingBoxAscent
+    , w: actualBoundingBoxLeft + actualBoundingBoxRight
+    , h: actualBoundingBoxAscent + actualBoundingBoxDescent
+    }
 
 -- | A point on the canvas.
 type Point =
