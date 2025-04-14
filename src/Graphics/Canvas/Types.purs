@@ -3,6 +3,8 @@ module Graphics.Canvas.Types
   , CanvasRenderingContext2D
   , OffscreenCanvasRenderingContext2D
   , Path2D
+  , TextAlign
+  , TextMetrics
   , Point
   , Dimensions
   , Rect
@@ -39,6 +41,24 @@ foreign import data CanvasRenderingContext2D :: Type
 foreign import data OffscreenCanvasRenderingContext2D :: Type
 
 foreign import data Path2D :: Type
+
+data TextAlign --okay there's a lot of this it should probably go in its own file actually
+
+-- | [The `TextMetrics` interface.](https://html.spec.whatwg.org/multipage/canvas.html#textmetrics)
+type TextMetrics =
+  { width :: Number
+  , actualBoundingBoxLeft :: Number
+  , actualBoundingBoxRight :: Number
+  , fontBoundingBoxAscent :: Number
+  , fontBoundingBoxDescent :: Number
+  , actualBoundingBoxAscent :: Number
+  , actualBoundingBoxDescent :: Number
+  , emHeightAscent :: Number
+  , emHeightDescent :: Number
+  , hangingBaseline :: Number
+  , alphabeticBaseline :: Number
+  , ideographicBaseline :: Number
+  }
 
 -- | A point on the canvas.
 type Point =

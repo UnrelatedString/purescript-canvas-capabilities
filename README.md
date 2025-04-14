@@ -7,6 +7,8 @@
 
 Bindings to the Canvas API, in the form of fine-grained "capability" classes, allowing easier mocking and porting, and reducing the mental load of using the Canvas API directly. Improving the ergonomics of the API itself is out of scope; see `massara-na-canvas` or any of the myriad JS libraries made for that purpose. Maintained independently from and not interoperable with the `canvas` package, but things should `unsafeCoerce` back and forth well enough if you really want them to, and uses other existing web bindings whenever possible.
 
+Almost entirely untested. Though appreciated, use at your own risk!
+
 Note that in all documentation of class members, edge case handling is specified as if prescriptive for all instances, but should not be interpreted as such. No user code should rely on such edge cases unless specifically intended to emulate the nitty-gritty of the Canvas API. Anyone writing instances other than the normative `Effect` instances should feel free to handle edge cases however they wish.
 
 ## Installation
@@ -101,12 +103,12 @@ Documentation is published [on Pursuit](https://pursuit.purescript.org/packages/
 
 #### mixin interface `CanvasDrawPath`
 
-- [ ] beginPath
-- [ ] fill
-- [ ] stroke
-- [ ] clip
-- [ ] isPointInPath
-- [ ] isPointInStroke
+- [x] beginPath
+- [x] fill
+- [x] stroke
+- [x] clip
+- [x] isPointInPath
+- [x] isPointInStroke
 
 #### mixin interface `CanvasUserInterface`
 
