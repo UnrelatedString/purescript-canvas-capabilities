@@ -14,7 +14,7 @@ export function clip_(path, ctx, style) {
     ctx.clip(...path, style);
 }
 
-export function isPointInPath_(path, ctx, p, style) {
+export function isPointInPath_(path, ctx, style, p) {
     return ctx.isPointInPath(...path, p.x, p.y, style);
 }
 
